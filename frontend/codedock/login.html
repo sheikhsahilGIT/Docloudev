@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CodeDock | Login</title>
+
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/login.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+
+<body>
+
+<main class="login-page">
+
+    <!-- ================= LEFT SIDE ================= -->
+
+    <section class="left-panel">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-code"></i>
+            </div>
+
+            <div>
+                <h1>CodeDock</h1>
+                <p>Cloud IDE</p>
+            </div>
+
+        </div>
+
+
+        <div class="hero-content">
+
+            <h2>
+                Code. Build.<br>
+                <span>Deploy.</span> Anywhere.
+            </h2>
+
+            <p class="hero-description">
+                A powerful Docker-based Cloud IDE that lets you
+                write, compile and run code securely from any device.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-cloud"></i>
+                    </div>
+
+                    <div>
+                        <h3>Cloud Powered</h3>
+                        <p>Run your development environment in the cloud.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+
+                    <div>
+                        <h3>Multiple Languages</h3>
+                        <p>Work with Python, Java, C++, JavaScript and more.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+
+                    <div>
+                        <h3>Secure & Isolated</h3>
+                        <p>Docker containers keep coding environments isolated.</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="laptop-container">
+            <img src="./login_page/laptop.jpg" alt="CodeDock Laptop">
+        </div>
+
+    </section>
+
+
+    <!-- ================= RIGHT SIDE ================= -->
+
+    <section class="right-panel">
+
+        <div class="login-card">
+
+            <div class="login-header">
+
+                <div class="login-icon">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+
+                <h2>Welcome Back!</h2>
+
+                <p>Sign in to continue to CodeDock</p>
+
+            </div>
+
+
+            <!-- LOGIN FORM -->
+
+            <form id="loginForm">
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="email">Email Address</label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-envelope input-icon"></i>
+
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="password">Password</label>
+
+                    <div class="input-box">
+
+                        <i class="fa-solid fa-lock input-icon"></i>
+
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Show password"
+                        >
+
+                            <i class="fa-solid fa-eye"></i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="login-options">
+
+                    <label class="remember">
+
+                        <input type="checkbox">
+
+                        <span>Remember Me</span>
+
+                    </label>
+
+
+                    <a href="#">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button type="submit" class="login-btn" id="loginBtn">
+
+                    <i class="fa-solid fa-right-to-bracket"></i>
+
+                    <span>Login</span>
+
+                </button>
+
+            </form>
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider">
+
+                <span></span>
+
+                <p>OR</p>
+
+                <span></span>
+
+            </div>
+
+
+            <!-- REGISTER -->
+
+            <button
+                type="button"
+                class="register-btn"
+                onclick="window.location.href='register.html'"
+            >
+
+                <i class="fa-solid fa-user-plus"></i>
+
+                Create New Account
+
+            </button>
+
+
+            <!-- DIVIDER -->
+
+            <div class="divider small-divider">
+
+                <span></span>
+
+                <p>OR</p>
+
+                <span></span>
+
+            </div>
+
+
+            <!-- ADMIN -->
+
+            <button
+                type="button"
+                class="admin-btn"
+                onclick="window.location.href='admin-login.html'"
+            >
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+                Admin Login
+
+            </button>
+
+
+            <!-- ADMIN INFORMATION -->
+
+            <div class="admin-info">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <div>
+
+                    <strong>Administrator Access</strong>
+
+                    <p>
+                        Admin area is restricted.
+                        Please use administrator credentials.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FOOTER -->
+
+            <div class="login-footer">
+
+                <p>
+                    By continuing, you agree to our
+                    <a href="#">Terms of Service</a>
+                    and
+                    <a href="#">Privacy Policy</a>.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script src="../js/api.js"></script>
+<script>
+
+    const passwordInput =
+        document.getElementById("password");
+
+    const passwordToggle =
+        document.getElementById("passwordToggle");
+
+
+    passwordToggle.addEventListener("click", function () {
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+            passwordToggle.innerHTML =
+                '<i class="fa-solid fa-eye-slash"></i>';
+
+        } else {
+
+            passwordInput.type = "password";
+
+            passwordToggle.innerHTML =
+                '<i class="fa-solid fa-eye"></i>';
+
+        }
+
+    });
+
+
+    // ===== Wired to the real backend =====
+    const loginForm = document.getElementById("loginForm");
+    const loginBtn = document.getElementById("loginBtn");
+
+    loginForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        loginBtn.disabled = true;
+
+        try {
+            const data = await apiFetch("/auth/login", {
+                method: "POST",
+                body: { email, password }
+            });
+            saveSession(data.token, data.user);
+            window.location.href = "../pages/dashboard.html";
+        } catch (err) {
+            alert(err.message);
+            loginBtn.disabled = false;
+        }
+    });
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign up · CloudDev</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card">
+      <div class="brand"><span class="mark"></span>CloudDev</div>
+      <h1>Create your account</h1>
+      <div class="sub">Spin up an isolated coding workspace in seconds.</div>
+
+      <label for="name">Name</label>
+      <input id="name" type="text" placeholder="Ada Lovelace">
+
+      <label for="email">Email</label>
+      <input id="email" type="email" placeholder="you@example.com">
+
+      <label for="password">Password</label>
+      <input id="password" type="password" placeholder="At least 8 characters">
+
+      <div id="errorBox" class="error-box"></div>
+
+      <button id="submitBtn">Create account</button>
+
+      <div class="switch-link">Already have an account? <a href="../codedock/login.html">Log in</a></div>
+    </div>
+  </div>
+
+  <script src="../js/api.js"></script>
+  <script>
+    document.getElementById("submitBtn").addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const errorBox = document.getElementById("errorBox");
+      errorBox.classList.remove("show");
+
+      if (!name || !email || !password) {
+        errorBox.textContent = "Please fill in every field.";
+        errorBox.classList.add("show");
+        return;
+      }
+
+      try {
+        const data = await apiFetch("/auth/signup", { method: "POST", body: { name, email, password } });
+        saveSession(data.token, data.user);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.classList.add("show");
+      }
+    });
+  </script>
+</body>
+</html>
