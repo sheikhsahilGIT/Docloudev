@@ -251,7 +251,8 @@ function containerCardHtml(p) {
       <div class="cc-actions">
         ${running
           ? `<button class="btn btn-ghost btn-sm" data-c-stop="${p.id}"><i data-lucide="square"></i> Stop</button>
-             <button class="btn btn-ghost btn-sm" data-c-restart="${p.id}"><i data-lucide="rotate-cw"></i> Restart</button>`
+             <button class="btn btn-ghost btn-sm" data-c-restart="${p.id}"><i data-lucide="rotate-cw"></i> Restart</button>
+             <button class="btn btn-ghost btn-sm" data-c-stats="${p.id}" data-name="${escapeHtml(p.name)}"><i data-lucide="gauge"></i></button>`
           : `<button class="btn btn-primary btn-sm" data-c-start="${p.id}" data-lang="${p.language}"><i data-lucide="play"></i> Start</button>`}
         ${hasContainer ? `<button class="btn btn-ghost btn-sm" data-c-logs="${p.id}" data-name="${escapeHtml(p.name)}"><i data-lucide="scroll-text"></i></button>` : ""}
         <button class="btn btn-ghost btn-sm" data-soon="Terminal opens once Phase 4's WebSocket bridge is built"><i data-lucide="square-terminal"></i></button>
@@ -286,6 +287,9 @@ function attachContainerCardEvents(container) {
   });
   container.querySelectorAll("[data-c-logs]").forEach((btn) => {
     btn.addEventListener("click", () => openLogsModal(btn.dataset.cLogs, btn.dataset.name));
+  });
+  container.querySelectorAll("[data-c-stats]").forEach((btn) => {
+    btn.addEventListener("click", () => openStatsModal(btn.dataset.cStats, btn.dataset.name));
   });
   container.querySelectorAll("[data-c-destroy]").forEach((btn) => {
     btn.addEventListener("click", () => openDestroyModal(btn.dataset.cDestroy, btn.dataset.name));
@@ -582,6 +586,55 @@ document.getElementById("logsDownloadBtn").addEventListener("click", () => {
   a.click();
   URL.revokeObjectURL(url);
 });
+
+/* ============================================================
+   LIVE STATS MODAL
+============================================================ */
+const statsModal = document.getElementById("statsModalOverlay");
+let statsCurrentProjectId = null;
+let statsPollInterval = null;
+
+function updateStatBar(barEl, percent) {
+  const pct = Math.min(100, Math.max(0, percent));
+  barEl.style.width = `${pct}%`;
+  barEl.classList.remove("warning", "critical");
+  if (pct >= 95) barEl.classList.add("critical");
+  else if (pct >= 80) barEl.classList.add("warning");
+}
+
+async function fetchStats() {
+  try {
+    const data = await apiFetch(`/projects/${statsCurrentProjectId}/container/stats`);
+    document.getElementById("statCpuValue").innerHTML = `${data.cpuPercent}<span class="unit">%</span>`;
+    document.getElementById("statMemValue").innerHTML = `${data.memUsageMb}<span class="unit"> MB</span>`;
+    updateStatBar(document.getElementById("statCpuBar"), data.cpuPercent);
+    updateStatBar(document.getElementById("statMemBar"), data.memPercent);
+    document.getElementById("statsNote").textContent = "Updating every 3s…";
+    document.getElementById("statsNote").classList.add("live");
+  } catch (err) {
+    document.getElementById("statsNote").textContent = err.message;
+    document.getElementById("statsNote").classList.remove("live");
+  }
+}
+
+function openStatsModal(projectId, name) {
+  statsCurrentProjectId = projectId;
+  document.getElementById("statsModalTitle").textContent = `Resource usage — ${name}`;
+  statsModal.classList.add("open");
+  fetchStats();
+  statsPollInterval = setInterval(fetchStats, 3000);
+}
+
+function closeStatsModal() {
+  statsModal.classList.remove("open");
+  if (statsPollInterval) {
+    clearInterval(statsPollInterval);
+    statsPollInterval = null;
+  }
+}
+
+document.getElementById("statsCloseBtn").addEventListener("click", closeStatsModal);
+statsModal.addEventListener("click", (e) => { if (e.target === statsModal) closeStatsModal(); });
 
 /* ============================================================
    DESTROY CONFIRMATION MODAL

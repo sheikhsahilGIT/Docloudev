@@ -427,6 +427,32 @@
         </div>
     </div>
 </div>
+<!-- ================= LIVE STATS MODAL ================= -->
+<div class="modal-overlay" id="statsModalOverlay">
+    <div class="modal-box" style="max-width:400px;">
+        <h3 id="statsModalTitle">Resource usage</h3>
+        <div class="sub">Live snapshot — refreshes automatically while open.</div>
+
+        <div class="stat-live-grid">
+            <div class="stat-live-card">
+                <div class="stat-live-label">CPU</div>
+                <div class="stat-live-value" id="statCpuValue">—<span class="unit">%</span></div>
+                <div class="stat-live-bar"><div class="stat-live-fill" id="statCpuBar"></div></div>
+            </div>
+            <div class="stat-live-card">
+                <div class="stat-live-label">Memory</div>
+                <div class="stat-live-value" id="statMemValue">—<span class="unit"> MB</span></div>
+                <div class="stat-live-bar"><div class="stat-live-fill" id="statMemBar"></div></div>
+            </div>
+        </div>
+
+        <div class="stat-live-note live" id="statsNote">Updating every 3s…</div>
+
+        <div class="modal-actions">
+            <button class="btn btn-ghost btn-block" id="statsCloseBtn">Close</button>
+        </div>
+    </div>
+</div>
 
 <!-- ================= DESTROY CONFIRMATION MODAL ================= -->
 <div class="modal-overlay" id="destroyModalOverlay">
