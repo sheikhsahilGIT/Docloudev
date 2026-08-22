@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 
 from routes.auth import auth_bp
 from routes.projects import projects_bp
+from routes.containers import containers_bp
 
 load_dotenv()
 
@@ -16,6 +17,7 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 app.register_blueprint(auth_bp, url_prefix="/api/auth")
 app.register_blueprint(projects_bp, url_prefix="/api/projects")
+app.register_blueprint(containers_bp, url_prefix="/api/projects")
 
 
 @app.route("/api/health")

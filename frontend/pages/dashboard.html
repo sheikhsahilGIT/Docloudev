@@ -10,6 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/containers.css">
 <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body>
@@ -113,7 +114,6 @@
     <!-- ================= MAIN COLUMN ================= -->
     <div class="main-col">
 
-        <!-- TOPBAR -->
         <header class="topbar">
             <div class="workspace-switcher" id="workspaceSwitcher">
                 <span class="dot"></span>
@@ -128,51 +128,30 @@
             </div>
 
             <div class="topbar-actions">
-                <button class="ai-shortcut-btn" id="aiShortcutBtn">
-                    <i data-lucide="sparkles"></i> Ask AI
-                </button>
-
-                <button class="icon-btn" id="notifBtn" aria-label="Notifications">
-                    <i data-lucide="bell"></i>
-                    <span class="badge"></span>
-                </button>
-
-                <button class="icon-btn" aria-label="Help">
-                    <i data-lucide="circle-help"></i>
-                </button>
-
-                <button class="icon-btn" id="settingsBtn" aria-label="Settings">
-                    <i data-lucide="settings"></i>
-                </button>
-
+                <button class="ai-shortcut-btn" id="aiShortcutBtn"><i data-lucide="sparkles"></i> Ask AI</button>
+                <button class="icon-btn" id="notifBtn" aria-label="Notifications"><i data-lucide="bell"></i><span class="badge"></span></button>
+                <button class="icon-btn" aria-label="Help"><i data-lucide="circle-help"></i></button>
+                <button class="icon-btn" id="settingsBtn" aria-label="Settings"><i data-lucide="settings"></i></button>
                 <button class="profile-btn" id="profileBtn">
                     <div class="profile-avatar" id="profileAvatar">U</div>
                     <i data-lucide="chevron-down" class="chev"></i>
                 </button>
             </div>
 
-            <!-- Notifications dropdown -->
             <div class="dropdown-panel" id="notifDropdown">
                 <div class="dropdown-head">Notifications</div>
                 <div class="dropdown-list">
                     <div class="dropdown-item">
                         <i data-lucide="party-popper"></i>
-                        <div>
-                            <div class="title">Welcome to CloudDev</div>
-                            <div class="sub">Your account was created successfully.</div>
-                        </div>
+                        <div><div class="title">Welcome to CloudDev</div><div class="sub">Your account was created successfully.</div></div>
                     </div>
                     <div class="dropdown-item">
-                        <i data-lucide="info"></i>
-                        <div>
-                            <div class="title">Container orchestration coming soon</div>
-                            <div class="sub">Phase 3 will let you launch real isolated containers.</div>
-                        </div>
+                        <i data-lucide="box"></i>
+                        <div><div class="title">Container orchestration is live</div><div class="sub">Create and manage real isolated containers from the Containers panel.</div></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Profile dropdown -->
             <div class="dropdown-panel profile-dropdown" id="profileDropdown">
                 <div class="dropdown-list">
                     <div class="dropdown-item"><i data-lucide="layout-grid"></i><div class="title">Workspace</div></div>
@@ -185,12 +164,10 @@
             </div>
         </header>
 
-        <!-- CONTENT -->
         <main class="content">
 
-            <!-- ===== OVERVIEW PANEL ===== -->
+            <!-- ===== OVERVIEW ===== -->
             <section class="panel active" id="panel-overview">
-
                 <div class="welcome-row animate-in">
                     <div>
                         <h1 id="welcomeHeading">Welcome back</h1>
@@ -204,85 +181,81 @@
 
                 <div class="quick-actions stagger">
                     <button class="qa-btn" id="qaNewProject">
-                        <div class="qa-icon"><i data-lucide="folder-plus"></i></div>
-                        <span>New Project</span>
+                        <div class="qa-icon"><i data-lucide="folder-plus"></i></div><span>New Project</span>
                     </button>
-                    <button class="qa-btn" data-soon="Launching containers arrives in Phase 3">
-                        <div class="qa-icon"><i data-lucide="box"></i></div>
-                        <span>Launch Container</span>
+                    <button class="qa-btn" id="qaLaunchContainer">
+                        <div class="qa-icon"><i data-lucide="box"></i></div><span>Launch Container</span>
                     </button>
                     <button class="qa-btn" data-soon="The in-browser editor arrives in Phase 4">
-                        <div class="qa-icon"><i data-lucide="code-2"></i></div>
-                        <span>Open VS Code</span>
+                        <div class="qa-icon"><i data-lucide="code-2"></i></div><span>Open VS Code</span>
                     </button>
                     <button class="qa-btn" data-soon="Repo import isn't built yet">
-                        <div class="qa-icon"><i data-lucide="git-branch"></i></div>
-                        <span>Clone Repository</span>
+                        <div class="qa-icon"><i data-lucide="git-branch"></i></div><span>Clone Repository</span>
                     </button>
                     <button class="qa-btn" data-soon="Deployment pipeline isn't built yet">
-                        <div class="qa-icon"><i data-lucide="rocket"></i></div>
-                        <span>Deploy Project</span>
+                        <div class="qa-icon"><i data-lucide="rocket"></i></div><span>Deploy Project</span>
                     </button>
                     <button class="qa-btn" id="qaAskAi">
-                        <div class="qa-icon"><i data-lucide="sparkles"></i></div>
-                        <span>Ask AI</span>
+                        <div class="qa-icon"><i data-lucide="sparkles"></i></div><span>Ask AI</span>
                     </button>
                 </div>
 
-                <div class="stats-grid stagger" id="statsGrid"><!-- injected --></div>
+                <div class="stats-grid stagger" id="statsGrid"></div>
 
                 <div class="section-head">
                     <h2>Recent Projects</h2>
                     <span class="link-btn" data-goto="projects" style="cursor:pointer;">View all</span>
                 </div>
-                <div class="project-grid" id="recentProjectsGrid"><!-- injected --></div>
+                <div class="project-grid" id="recentProjectsGrid"></div>
 
                 <div class="two-col">
                     <div class="panel-card">
                         <h2>Recent Activity</h2>
-                        <div class="timeline" id="activityTimeline"><!-- injected --></div>
+                        <div class="timeline" id="activityTimeline"></div>
                     </div>
                     <div class="panel-card">
                         <h2>AI Suggestions</h2>
                         <div class="timeline">
                             <div class="timeline-item">
                                 <div class="timeline-dot"><i data-lucide="sparkles"></i></div>
-                                <div>
-                                    <div class="t-title">Generate a Dockerfile for your latest project</div>
-                                    <div class="t-time">Available once the AI assistant is connected</div>
-                                </div>
+                                <div><div class="t-title">Generate a Dockerfile for your latest project</div><div class="t-time">Available once the AI assistant is connected</div></div>
                             </div>
                             <div class="timeline-item">
                                 <div class="timeline-dot"><i data-lucide="file-text"></i></div>
-                                <div>
-                                    <div class="t-title">Auto-generate a README</div>
-                                    <div class="t-time">Available once the AI assistant is connected</div>
-                                </div>
+                                <div><div class="t-title">Auto-generate a README</div><div class="t-time">Available once the AI assistant is connected</div></div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </section>
 
-            <!-- ===== PROJECTS PANEL ===== -->
+            <!-- ===== PROJECTS ===== -->
             <section class="panel" id="panel-projects">
                 <div class="section-head animate-in">
                     <h2 style="font-size:18px;">All Projects</h2>
                     <button class="btn btn-primary" id="projectsNewBtn"><i data-lucide="plus"></i> New Project</button>
                 </div>
-                <div class="project-grid" id="allProjectsGrid"><!-- injected --></div>
+                <div class="project-grid" id="allProjectsGrid"></div>
+            </section>
+
+            <!-- ===== DOCKER CONTAINERS (real) ===== -->
+            <section class="panel" id="panel-containers">
+                <div class="section-head animate-in">
+                    <div>
+                        <h2 style="font-size:18px;">Docker Containers</h2>
+                        <p class="sub" style="color:var(--text-secondary); font-size:12px; margin-top:3px;">Each project runs in its own isolated, resource-capped container.</p>
+                    </div>
+                    <button class="btn btn-primary" id="containersNewBtn"><i data-lucide="plus"></i> Create Container</button>
+                </div>
+                <div class="container-grid" id="containersGrid"></div>
             </section>
 
             <!-- ===== GENERIC COMING-SOON PANELS ===== -->
             <section class="panel" id="panel-workspaces" data-title="Workspaces" data-icon="layout-grid"
-                data-desc="A dedicated view of every active workspace, its container, and resource usage will live here." data-phase="Phase 3"></section>
-
-            <section class="panel" id="panel-containers" data-title="Docker Containers" data-icon="box"
-                data-desc="Live container list — start, stop, restart, and inspect resource usage per project." data-phase="Phase 3"></section>
+                data-desc="A dedicated view of every active workspace and its container will live here." data-phase="a later phase"></section>
 
             <section class="panel" id="panel-images" data-title="Container Images" data-icon="layers"
-                data-desc="Manage the base and per-language images your workspaces are built from." data-phase="Phase 3"></section>
+                data-desc="Manage the clouddev/python, clouddev/java, and clouddev/cpp base images — pull, update, inspect." data-phase="a later phase"></section>
 
             <section class="panel" id="panel-terminal" data-title="Terminal" data-icon="square-terminal"
                 data-desc="A real browser terminal streamed live from your container's shell over WebSockets." data-phase="Phase 4"></section>
@@ -294,28 +267,28 @@
                 data-desc="Deploy a project, track rollout progress, and roll back to a previous version." data-phase="Phase 6"></section>
 
             <section class="panel" id="panel-monitoring" data-title="Monitoring" data-icon="activity"
-                data-desc="CPU, RAM, storage, and network charts for every running container." data-phase="Phase 5"></section>
+                data-desc="Historical CPU, RAM, storage, and network charts across all containers." data-phase="a later phase"></section>
 
             <section class="panel" id="panel-ai" data-title="AI Assistant" data-icon="sparkles"
-                data-desc="A full-page AI assistant for generating Dockerfiles, explaining code, and debugging — open the slide-over panel from the top bar for a preview of the interface." data-phase="Future"></section>
+                data-desc="A full-page AI assistant for generating Dockerfiles, explaining code, and debugging — open the slide-over from the top bar for a preview." data-phase="the future"></section>
 
             <section class="panel" id="panel-templates" data-title="Templates" data-icon="file-stack"
-                data-desc="One-click starter templates per language and framework." data-phase="Future"></section>
+                data-desc="One-click starter templates per language." data-phase="the future"></section>
 
             <section class="panel" id="panel-marketplace" data-title="Marketplace" data-icon="store"
-                data-desc="Community and official extensions, images, and templates." data-phase="Future"></section>
+                data-desc="Community and official extensions, images, and templates." data-phase="the future"></section>
 
             <section class="panel" id="panel-extensions" data-title="Extensions" data-icon="puzzle"
-                data-desc="Install editor and workspace extensions." data-phase="Future"></section>
+                data-desc="Install editor and workspace extensions." data-phase="the future"></section>
 
             <section class="panel" id="panel-logs" data-title="Logs" data-icon="scroll-text"
-                data-desc="Searchable, filterable logs from your containers and deployments." data-phase="Phase 5"></section>
+                data-desc="A unified, searchable log stream across every container — right now, logs are viewed per-container from the Containers panel." data-phase="a later phase"></section>
 
             <section class="panel" id="panel-activity-full" data-title="Activity" data-icon="history"
-                data-desc="A complete history of everything that's happened across your workspaces." data-phase="Phase 5"></section>
+                data-desc="A complete history of everything that's happened across your workspaces." data-phase="a later phase"></section>
 
             <section class="panel" id="panel-settings" data-title="Settings" data-icon="settings"
-                data-desc="Account, workspace, and billing settings." data-phase="Future"></section>
+                data-desc="Account, workspace, and billing settings." data-phase="the future"></section>
 
         </main>
     </div>
@@ -330,9 +303,7 @@
         <button class="close-btn" id="aiCloseBtn"><i data-lucide="x"></i></button>
     </div>
     <div class="ai-body" id="aiBody">
-        <div class="ai-msg bot">
-            Hi! I'll be able to generate Dockerfiles, explain code, and debug your projects once the AI backend is connected. This preview shows the interface only.
-        </div>
+        <div class="ai-msg bot">Hi! I'll be able to generate Dockerfiles, explain code, and debug your projects once the AI backend is connected. This preview shows the interface only.</div>
     </div>
     <div class="ai-suggestions">
         <div class="ai-chip">Generate Dockerfile</div>
@@ -346,31 +317,131 @@
     </div>
 </div>
 
-<!-- ================= CREATE PROJECT MODAL ================= -->
+<!-- ================= CREATE CONTAINER STEPPER MODAL ================= -->
 <div class="modal-overlay" id="createModalOverlay">
-    <div class="modal-box">
-        <h3>Create a new project</h3>
-        <div class="sub">Spin up a fresh workspace for your code.</div>
+    <div class="modal-box" style="max-width:440px;">
+
+        <div class="stepper-head">
+            <div class="step-dot-wrap">
+                <div class="step-circle active" data-step-circle="1">1</div>
+                <div class="step-line" data-step-line="1"></div>
+                <div class="step-circle" data-step-circle="2">2</div>
+                <div class="step-line" data-step-line="2"></div>
+                <div class="step-circle" data-step-circle="3">3</div>
+            </div>
+        </div>
 
         <div class="modal-error" id="createModalError"></div>
 
-        <div class="field-group">
-            <label for="newProjectName">Project name</label>
-            <input type="text" id="newProjectName" placeholder="my-first-app">
+        <!-- STEP 1: Runtime -->
+        <div class="step-panel active" data-step="1">
+            <div class="step-title">Select runtime</div>
+            <div class="step-sub">Name your project and choose its language.</div>
+
+            <div class="field-group">
+                <label for="newProjectName">Project name</label>
+                <input type="text" id="newProjectName" placeholder="my-first-app">
+            </div>
+
+            <label style="display:block; font-size:12px; font-weight:600; color:var(--text-secondary); margin-bottom:8px;">Language</label>
+            <div class="lang-choice-row" id="langChoiceRow">
+                <div class="lang-choice selected" data-lang="python">
+                    <div class="li">🐍</div><div class="ln">Python</div><div class="lv">3.12</div>
+                </div>
+                <div class="lang-choice" data-lang="java">
+                    <div class="li">☕</div><div class="ln">Java</div><div class="lv">17</div>
+                </div>
+                <div class="lang-choice" data-lang="cpp">
+                    <div class="li">⚙️</div><div class="ln">C++</div><div class="lv">GCC 12</div>
+                </div>
+            </div>
         </div>
-        <div class="field-group">
-            <label for="newProjectLang">Language</label>
-            <select id="newProjectLang">
-                <option value="python">Python</option>
-                <option value="javascript">JavaScript</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-            </select>
+
+        <!-- STEP 2: Resources -->
+        <div class="step-panel" data-step="2">
+            <div class="step-title">Configure resources</div>
+            <div class="step-sub">Memory and storage are capped at 512 MB per container.</div>
+
+            <div class="slider-block">
+                <div class="slider-head"><label>CPU</label><span class="slider-value" id="cpuValue">1 CPU</span></div>
+                <input type="range" id="cpuSlider" min="1" max="4" step="1" value="1">
+            </div>
+
+            <div class="slider-block">
+                <div class="slider-head"><label>Memory</label><span class="slider-value" id="memValue">256 MB</span></div>
+                <input type="range" id="memSlider" min="128" max="512" step="128" value="256">
+                <div class="slider-limit-note">Maximum: 512 MB</div>
+            </div>
+
+            <div class="slider-block">
+                <div class="slider-head"><label>Storage</label><span class="slider-value" id="storageValue">256 MB</span></div>
+                <input type="range" id="storageSlider" min="128" max="512" step="128" value="256">
+                <div class="slider-limit-note">Maximum: 512 MB</div>
+            </div>
+
+            <div class="resource-summary">
+                <div class="rs-item"><div class="rs-label">CPU</div><div class="rs-value" id="summaryCpu">1</div></div>
+                <div class="rs-item"><div class="rs-label">Memory</div><div class="rs-value" id="summaryMem">256/512</div></div>
+                <div class="rs-item"><div class="rs-label">Storage</div><div class="rs-value" id="summaryStorage">256/512</div></div>
+            </div>
+        </div>
+
+        <!-- STEP 3: Review -->
+        <div class="step-panel" data-step="3">
+            <div class="step-title">Review & create</div>
+            <div class="step-sub">Confirm the configuration before launching.</div>
+
+            <div class="review-row"><span class="rk">Project name</span><span class="rv" id="reviewName">—</span></div>
+            <div class="review-row"><span class="rk">Language</span><span class="rv" id="reviewLang">—</span></div>
+            <div class="review-row"><span class="rk">Base image</span><span class="rv" id="reviewImage">—</span></div>
+            <div class="review-row"><span class="rk">CPU</span><span class="rv" id="reviewCpu">—</span></div>
+            <div class="review-row"><span class="rk">Memory</span><span class="rv" id="reviewMem">—</span></div>
+            <div class="review-row"><span class="rk">Storage</span><span class="rv" id="reviewStorage">—</span></div>
+        </div>
+
+        <div class="stepper-footer">
+            <button class="btn btn-ghost" id="stepBackBtn" style="display:none;">Back</button>
+            <button class="btn btn-ghost" id="stepCancelBtn">Cancel</button>
+            <button class="btn btn-primary" id="stepNextBtn">Next</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= LOGS MODAL ================= -->
+<div class="modal-overlay" id="logsModalOverlay">
+    <div class="modal-box" style="max-width:620px;">
+        <h3 id="logsModalTitle">Container logs</h3>
+        <div class="sub">Last 200 lines — refresh to fetch the latest.</div>
+
+        <div class="logs-toolbar">
+            <input type="text" id="logsSearchInput" placeholder="Filter logs…">
+            <button class="btn btn-ghost btn-sm" id="logsRefreshBtn"><i data-lucide="refresh-cw"></i></button>
+            <button class="btn btn-ghost btn-sm" id="logsCopyBtn"><i data-lucide="copy"></i></button>
+            <button class="btn btn-ghost btn-sm" id="logsDownloadBtn"><i data-lucide="download"></i></button>
+        </div>
+
+        <div class="logs-viewer" id="logsViewer"><div class="log-empty">Loading logs…</div></div>
+
+        <div class="modal-actions">
+            <button class="btn btn-ghost btn-block" id="logsCloseBtn">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- ================= DESTROY CONFIRMATION MODAL ================= -->
+<div class="modal-overlay" id="destroyModalOverlay">
+    <div class="modal-box" style="max-width:380px;">
+        <h3>Destroy container?</h3>
+        <div class="sub" id="destroySub">This removes the running container. Your project's files are kept.</div>
+
+        <div class="destroy-warning">
+            <i data-lucide="triangle-alert"></i>
+            <div>This action stops and permanently removes the container. You can create a new one for this project afterward, but any unsaved state inside it is lost.</div>
         </div>
 
         <div class="modal-actions">
-            <button class="btn btn-ghost btn-block" id="createModalCancel">Cancel</button>
-            <button class="btn btn-primary btn-block" id="createModalSubmit"><i data-lucide="plus"></i> Create</button>
+            <button class="btn btn-ghost btn-block" id="destroyCancelBtn">Cancel</button>
+            <button class="btn btn-danger btn-block" id="destroyConfirmBtn"><i data-lucide="trash-2"></i> Destroy</button>
         </div>
     </div>
 </div>
