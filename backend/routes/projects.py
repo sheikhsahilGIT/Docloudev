@@ -7,8 +7,6 @@ from services import docker_manager
 
 projects_bp = Blueprint("projects", __name__)
 
-# Per the container orchestration spec: CloudDev supports exactly these
-# three languages — no JavaScript, no others.
 ALLOWED_LANGUAGES = {"python", "java", "cpp"}
 
 
@@ -32,6 +30,20 @@ def serialize_project(p):
 def list_projects():
     projects = projects_collection.find({"userId": request.user_id}).sort("createdAt", -1)
     return jsonify([serialize_project(p) for p in projects])
+
+
+@projects_bp.route("/<project_id>", methods=["GET"])
+@require_auth
+def get_project(project_id):
+    try:
+        project = projects_collection.find_one({"_id": ObjectId(project_id), "userId": request.user_id})
+    except Exception:
+        return jsonify({"message": "Project not found"}), 404
+
+    if not project:
+        return jsonify({"message": "Project not found"}), 404
+
+    return jsonify(serialize_project(project))
 
 
 @projects_bp.route("", methods=["POST"])

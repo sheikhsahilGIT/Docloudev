@@ -255,7 +255,9 @@ function containerCardHtml(p) {
              <button class="btn btn-ghost btn-sm" data-c-stats="${p.id}" data-name="${escapeHtml(p.name)}"><i data-lucide="gauge"></i></button>`
           : `<button class="btn btn-primary btn-sm" data-c-start="${p.id}" data-lang="${p.language}"><i data-lucide="play"></i> Start</button>`}
         ${hasContainer ? `<button class="btn btn-ghost btn-sm" data-c-logs="${p.id}" data-name="${escapeHtml(p.name)}"><i data-lucide="scroll-text"></i></button>` : ""}
-        <button class="btn btn-ghost btn-sm" data-soon="Terminal opens once Phase 4's WebSocket bridge is built"><i data-lucide="square-terminal"></i></button>
+        ${running
+          ? `<a class="btn btn-ghost btn-sm" href="../pages/workspace.html?project=${p.id}" style="text-decoration:none;"><i data-lucide="square-terminal"></i></a>`
+          : `<button class="btn btn-ghost btn-sm" data-soon="Start the container first to open its workspace"><i data-lucide="square-terminal"></i></button>`}
         ${hasContainer ? `<button class="btn btn-danger-ghost btn-sm" data-c-destroy="${p.id}" data-name="${escapeHtml(p.name)}"><i data-lucide="trash-2"></i></button>` : ""}
       </div>
     </div>`;

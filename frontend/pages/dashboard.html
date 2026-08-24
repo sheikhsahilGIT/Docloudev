@@ -257,11 +257,27 @@
             <section class="panel" id="panel-images" data-title="Container Images" data-icon="layers"
                 data-desc="Manage the clouddev/python, clouddev/java, and clouddev/cpp base images — pull, update, inspect." data-phase="a later phase"></section>
 
-            <section class="panel" id="panel-terminal" data-title="Terminal" data-icon="square-terminal"
-                data-desc="A real browser terminal streamed live from your container's shell over WebSockets." data-phase="Phase 4"></section>
+            <section class="panel" id="panel-terminal">
+                <div class="coming-soon animate-in">
+                    <div class="cs-icon"><i data-lucide="square-terminal"></i></div>
+                    <h2>Terminal</h2>
+                    <p>The terminal opens per-container, not from a generic page — pick a running container below and click its terminal icon.</p>
+                    <button class="btn btn-primary" style="margin-top:16px;" data-goto="containers">
+                        <i data-lucide="box"></i> Go to Docker Containers
+                    </button>
+                </div>
+            </section>
 
-            <section class="panel" id="panel-files" data-title="File Manager" data-icon="folder-open"
-                data-desc="Browse, edit, and manage files inside your workspace's persistent volume." data-phase="Phase 4"></section>
+            <section class="panel" id="panel-files">
+                <div class="coming-soon animate-in">
+                    <div class="cs-icon"><i data-lucide="folder-open"></i></div>
+                    <h2>File Manager</h2>
+                    <p>Files live inside each project's own workspace — pick a running container below and click its terminal icon to open the file explorer and editor.</p>
+                    <button class="btn btn-primary" style="margin-top:16px;" data-goto="containers">
+                        <i data-lucide="box"></i> Go to Docker Containers
+                    </button>
+                </div>
+            </section>
 
             <section class="panel" id="panel-deployments" data-title="Deployments" data-icon="rocket"
                 data-desc="Deploy a project, track rollout progress, and roll back to a previous version." data-phase="Phase 6"></section>
