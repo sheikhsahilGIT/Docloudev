@@ -22,10 +22,16 @@ async function loadProject() {
     currentProject = await apiFetch(`/projects/${projectId}`);
     document.getElementById("wsProjectName").textContent = currentProject.name;
     document.getElementById("wsLangTag").textContent = currentProject.language;
-    applyStatus(currentProject.status);
   } catch (err) {
     document.getElementById("wsProjectName").textContent = "Error";
     document.getElementById("wsStatusText").textContent = err.message;
+    return;
+  }
+
+  try {
+    applyStatus(currentProject.status);
+  } catch (err) {
+    console.error("applyStatus failed:", err);
   }
 }
 
@@ -288,6 +294,13 @@ let terminalStarted = false;
 
 function connectTerminal() {
   if (terminalStarted) return;
+
+  if (typeof Terminal === "undefined" || typeof io === "undefined") {
+    document.getElementById("termStatusText").textContent =
+      "Terminal library failed to load — check your internet connection and refresh.";
+    return;
+  }
+
   terminalStarted = true;
 
   if (!term) {
