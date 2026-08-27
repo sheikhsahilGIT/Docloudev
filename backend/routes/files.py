@@ -8,6 +8,18 @@ from services.docker_manager import WORKSPACES_ROOT
 
 files_bp = Blueprint("files", __name__)
 
+def _safe_execute(fn, *args, **kwargs):
+    """Runs a file operation and converts any unexpected error into a
+    clean message — never lets a raw traceback reach the browser, even
+    with Flask's debug mode on."""
+    try:
+        return fn(*args, **kwargs), None
+    except ValueError:
+        raise
+    except Exception as e:
+        print(f"\n\n=== FILE OPERATION FAILED ===\n{e}\n=== END ===\n\n")
+        return None, "A file system error occurred. Please try again."
+
 
 def _get_owned_project(project_id, owner_id):
     try:
@@ -71,9 +83,17 @@ def read_file(project_id):
     if not os.path.isfile(target):
         return jsonify({"message": "File not found"}), 404
 
-    with open(target, "r", encoding="utf-8", errors="replace") as f:
-        content = f.read()
+    try:
+        with open(target, "r", encoding="utf-8", errors="replace") as f:
+            content = f.read()
+    except Exception as e:
+        print(f"\n\n=== FILE READ FAILED ===\n{e}\n=== END ===\n\n")
+        return jsonify({"message": "Unable to read this file."}), 500
+
     return jsonify({"content": content})
+
+
+MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024  # 10 MB — generous for source code
 
 
 @files_bp.route("/<project_id>/files/content", methods=["PUT"])
@@ -87,15 +107,42 @@ def write_file(project_id):
     rel_path = data.get("path", "")
     content = data.get("content", "")
 
+    if len(content.encode("utf-8")) > MAX_FILE_SIZE_BYTES:
+        return jsonify({"message": "File is too large to save (10 MB limit)."}), 413
+
     try:
         target = _safe_path(project_id, rel_path)
     except ValueError:
         return jsonify({"message": "Invalid path"}), 400
 
-    os.makedirs(os.path.dirname(target), exist_ok=True)
-    with open(target, "w", encoding="utf-8") as f:
-        f.write(content)
+    try:
+        os.makedirs(os.path.dirname(target), exist_ok=True)
+        with open(target, "w", encoding="utf-8") as f:
+            f.write(content)
+    except Exception as e:
+        print(f"\n\n=== FILE WRITE FAILED ===\n{e}\n=== END ===\n\n")
+        return jsonify({"message": "Unable to save this file."}), 500
+
     return jsonify({"message": "Saved"})
+
+
+# Characters that are invalid in filenames on Windows (and safest to
+# just disallow everywhere for consistency), plus an empty name.
+_INVALID_NAME_CHARS = set('<>:"|?*')
+
+
+def _validate_name(rel_path):
+    stripped = rel_path.strip()
+    if not stripped:
+        raise ValueError("Name cannot be empty")
+    # The final segment is the actual file/folder name being created.
+    final_segment = stripped.replace("\\", "/").rstrip("/").split("/")[-1]
+    if not final_segment:
+        raise ValueError("Name cannot be empty")
+    if any(c in _INVALID_NAME_CHARS for c in final_segment):
+        raise ValueError('Name cannot contain: < > : " | ? *')
+    if final_segment in (".", ".."):
+        raise ValueError("Invalid name")
 
 
 @files_bp.route("/<project_id>/files", methods=["POST"])
@@ -110,12 +157,13 @@ def create_file_or_folder(project_id):
     item_type = data.get("type", "file")
 
     try:
+        _validate_name(rel_path)
         target = _safe_path(project_id, rel_path)
-    except ValueError:
-        return jsonify({"message": "Invalid path"}), 400
+    except ValueError as e:
+        return jsonify({"message": str(e)}), 400
 
     if os.path.exists(target):
-        return jsonify({"message": "Already exists"}), 409
+        return jsonify({"message": "A file or folder with that name already exists"}), 409
 
     if item_type == "dir":
         os.makedirs(target, exist_ok=True)

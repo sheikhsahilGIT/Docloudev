@@ -80,7 +80,7 @@ def create_and_start_container(project_id, owner_id, language, cpu=1, memory_mb=
     except NotFound:
         pass
 
-    run_kwargs = dict(
+        run_kwargs = dict(
         name=container_name,
         detach=True,
         tty=True,
@@ -90,6 +90,10 @@ def create_and_start_container(project_id, owner_id, language, cpu=1, memory_mb=
         volumes={host_path: {"bind": "/workspace", "mode": "rw"}},
         network=DOCKER_NETWORK,
         mem_limit=f"{memory_mb}m",
+        # Without this, Docker silently allows up to 2x mem_limit via
+        # swap — setting memswap_limit equal to mem_limit closes that
+        # gap and makes memory_mb a genuine hard ceiling.
+        memswap_limit=f"{memory_mb}m",
         nano_cpus=int(cpu * 1_000_000_000),
         pids_limit=128,
         labels={

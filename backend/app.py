@@ -9,6 +9,7 @@ from routes.projects import projects_bp
 from routes.containers import containers_bp
 from routes.files import files_bp
 from services import terminal_manager
+from services import docker_manager
 from utils.auth_utils import decode_token
 from models.db import projects_collection
 from bson import ObjectId
@@ -28,7 +29,29 @@ app.register_blueprint(files_bp, url_prefix="/api/projects")
 
 @app.route("/api/health")
 def health():
-    return jsonify({"status": "ok", "message": "CloudDev backend is running"})
+    """Real health check — actually pings Mongo and Docker rather than
+    just confirming the Flask process itself is alive."""
+    db_status = "healthy"
+    try:
+        projects_collection.database.client.admin.command("ping")
+    except Exception as e:
+        db_status = "unhealthy"
+        app.logger.warning(f"Health check: database unreachable: {e}")
+
+    docker_status = "healthy"
+    try:
+        docker_manager._client.ping()
+    except Exception as e:
+        docker_status = "unhealthy"
+        app.logger.warning(f"Health check: docker unreachable: {e}")
+
+    overall_healthy = db_status == "healthy" and docker_status == "healthy"
+
+    return jsonify({
+        "status": "healthy" if overall_healthy else "degraded",
+        "database": db_status,
+        "docker": docker_status,
+    }), 200 if overall_healthy else 503
 
 
 @socketio.on("connect")
@@ -45,11 +68,6 @@ def handle_disconnect():
 # ============================================================
 # Live terminal — bridges Xterm.js in the browser to a real shell
 # running inside the project's EXISTING Phase 3 container.
-#
-# The browser sends only a projectId. This handler looks up that
-# project's containerId itself (after checking ownership) — a user
-# can never pass a raw container_id and reach someone else's
-# container this way.
 # ============================================================
 
 @socketio.on("terminal_start")
@@ -70,10 +88,14 @@ def handle_terminal_start(data):
         emit("terminal_error", {"message": "Unauthorized"})
         return
 
-    project = projects_collection.find_one({
-        "_id": ObjectId(project_id),
-        "userId": payload["userId"],
-    })
+    try:
+        project = projects_collection.find_one({
+            "_id": ObjectId(project_id),
+            "userId": payload["userId"],
+        })
+    except Exception:
+        emit("terminal_error", {"message": "Invalid project"})
+        return
 
     if not project or not project.get("containerId") or project.get("status") != "running":
         emit("terminal_error", {"message": "Container is not running — start it first."})
@@ -81,8 +103,12 @@ def handle_terminal_start(data):
 
     session_id = request.sid
     join_room(session_id)
-    terminal_manager.start_terminal_session(session_id, project["containerId"], socketio, cols, rows)
-    emit("terminal_ready", {})
+    try:
+        terminal_manager.start_terminal_session(session_id, project["containerId"], socketio, cols, rows)
+        emit("terminal_ready", {})
+    except Exception as e:
+        app.logger.error(f"Terminal session failed to start: {e}")
+        emit("terminal_error", {"message": "Unable to start the terminal. Please try again."})
 
 
 @socketio.on("terminal_input")

@@ -10,6 +10,34 @@ projects_bp = Blueprint("projects", __name__)
 ALLOWED_LANGUAGES = {"python", "java", "cpp"}
 
 
+def _reconcile_status(project):
+    """If the database says a container is running (or mid-transition)
+    but Docker disagrees, the database was stale — sync it to reality
+    rather than let the dashboard keep showing a status that's no
+    longer true (e.g. someone ran `docker stop` outside the app, or
+    the container crashed)."""
+    container_id = project.get("containerId")
+    db_status = project.get("status")
+
+    if not container_id or db_status not in ("running", "starting", "restarting"):
+        return project
+
+    real_status = docker_manager.get_status(container_id)
+
+    if real_status == "running":
+        mapped = "running"
+    elif real_status in ("exited", "not_found", "dead"):
+        mapped = "stopped"
+    else:
+        mapped = real_status
+
+    if mapped != db_status:
+        projects_collection.update_one({"_id": project["_id"]}, {"$set": {"status": mapped}})
+        project["status"] = mapped
+
+    return project
+
+
 def serialize_project(p):
     return {
         "id": str(p["_id"]),
@@ -28,7 +56,8 @@ def serialize_project(p):
 @projects_bp.route("", methods=["GET"])
 @require_auth
 def list_projects():
-    projects = projects_collection.find({"userId": request.user_id}).sort("createdAt", -1)
+    projects = list(projects_collection.find({"userId": request.user_id}).sort("createdAt", -1))
+    projects = [_reconcile_status(p) for p in projects]
     return jsonify([serialize_project(p) for p in projects])
 
 
@@ -43,6 +72,7 @@ def get_project(project_id):
     if not project:
         return jsonify({"message": "Project not found"}), 404
 
+    project = _reconcile_status(project)
     return jsonify(serialize_project(project))
 
 
@@ -87,7 +117,8 @@ def delete_project(project_id):
         try:
             docker_manager.destroy_container(project["containerId"])
         except docker_manager.ContainerError as e:
-            return jsonify({"message": f"Could not remove container: {e}"}), 500
+            print(f"\n\n=== PROJECT DELETE: CONTAINER CLEANUP FAILED ===\n{e}\n=== END ===\n\n")
+            return jsonify({"message": "Unable to remove the project's container. Please try again."}), 500
 
     projects_collection.delete_one({"_id": ObjectId(project_id)})
     return jsonify({"message": "Project deleted"})

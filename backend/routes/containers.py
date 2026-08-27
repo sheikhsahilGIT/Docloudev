@@ -18,6 +18,18 @@ def _log_container_error(action, e):
     print(f"\n\n=== CONTAINER {action} FAILED ===\n{e}\n=== END ===\n\n")
 
 
+# User-facing messages — never expose raw Docker/Python exception text.
+# The real detail always goes to the server console via _log_container_error.
+_CLEAN_MESSAGES = {
+    "START": "Unable to start the development environment. Please try again.",
+    "STOP": "Unable to stop the container. Please try again.",
+    "RESTART": "Unable to restart the container. Please try again.",
+    "DESTROY": "Unable to remove the container. Please try again.",
+    "LOGS": "Unable to fetch logs right now.",
+    "STATS": "Resource stats are temporarily unavailable.",
+}
+
+
 @containers_bp.route("/<project_id>/container/start", methods=["POST"])
 @require_auth
 def start_container(project_id):
@@ -58,7 +70,7 @@ def start_container(project_id):
     except docker_manager.ContainerError as e:
         _log_container_error("START", e)
         projects_collection.update_one({"_id": ObjectId(project_id)}, {"$set": {"status": "error"}})
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["START"]}), 500
 
     updated = projects_collection.find_one({"_id": ObjectId(project_id)})
     return jsonify({"status": updated["status"]})
@@ -77,7 +89,7 @@ def stop_container(project_id):
         status = docker_manager.stop_container(project["containerId"])
     except docker_manager.ContainerError as e:
         _log_container_error("STOP", e)
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["STOP"]}), 500
 
     projects_collection.update_one({"_id": ObjectId(project_id)}, {"$set": {"status": status}})
     return jsonify({"status": status})
@@ -96,7 +108,7 @@ def restart_container(project_id):
         result = docker_manager.restart_container(project["containerId"])
     except docker_manager.ContainerError as e:
         _log_container_error("RESTART", e)
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["RESTART"]}), 500
 
     projects_collection.update_one(
         {"_id": ObjectId(project_id)},
@@ -120,7 +132,7 @@ def destroy_container(project_id):
         docker_manager.destroy_container(project["containerId"])
     except docker_manager.ContainerError as e:
         _log_container_error("DESTROY", e)
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["DESTROY"]}), 500
 
     projects_collection.update_one(
         {"_id": ObjectId(project_id)},
@@ -158,7 +170,7 @@ def container_logs(project_id):
         logs = docker_manager.get_logs(project["containerId"], tail=tail)
     except docker_manager.ContainerError as e:
         _log_container_error("LOGS", e)
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["LOGS"]}), 500
 
     return jsonify({"logs": logs})
 
@@ -176,6 +188,6 @@ def container_stats(project_id):
         stats = docker_manager.get_stats(project["containerId"])
     except docker_manager.ContainerError as e:
         _log_container_error("STATS", e)
-        return jsonify({"message": str(e)}), 500
+        return jsonify({"message": _CLEAN_MESSAGES["STATS"]}), 500
 
     return jsonify(stats)
