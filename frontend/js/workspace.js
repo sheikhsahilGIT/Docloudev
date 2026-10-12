@@ -114,7 +114,9 @@ function escapeHtml(str) {
 
 const ICON_FILE = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>`;
 const ICON_FOLDER = `<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>`;
-const ICON_CHEVRON = (open) => `<svg class="chevron ${open ? "open" : ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>`;
+const CHEVRON_BOX = "width:12px;height:12px;min-width:12px;max-width:12px;flex:0 0 12px;";
+const ICON_CHEVRON = (open) => `<svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="3" style="${CHEVRON_BOX}transform:rotate(${open ? 90 : 0}deg);transition:none;"><path d="M9 18l6-6-6-6"/></svg>`;
+const ICON_SPACER = `<span style="display:inline-block;${CHEVRON_BOX}"></span>`;
 const ICON_NEW_FILE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="12" y1="12" x2="12" y2="18"/><line x1="9" y1="15" x2="15" y2="15"/></svg>`;
 const ICON_NEW_FOLDER = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>`;
 const ICON_RENAME = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>`;
@@ -171,7 +173,7 @@ function renderTreeNodes(children, depth) {
     const active = n.path === currentFilePath ? " active" : "";
     return `
       <div class="ws-file-item${active}" data-path="${path}" data-type="file" style="padding-left:${pad}px">
-        <span class="chevron-spacer"></span>${ICON_FILE}<span class="name">${name}</span>
+        ${ICON_SPACER}${ICON_FILE}<span class="name">${name}</span>
         <div class="ws-file-actions">
           <button data-action="rename" data-path="${path}" title="Rename / move">${ICON_RENAME}</button>
           <button data-action="delete" data-path="${path}" title="Delete file">${ICON_DELETE}</button>
