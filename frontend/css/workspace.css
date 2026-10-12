@@ -147,3 +147,24 @@ html, body { height: 100%; background: var(--ws-bg); color: var(--ws-text); font
     animation: wsShine 1.3s ease-in-out infinite;
 }
 </parameter>
+/* ---- Expandable folder tree ---- */
+.ws-file-item .chevron {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  color: #64748B;
+  transition: transform 0.15s ease;
+}
+.ws-file-item .chevron.open { transform: rotate(90deg); }
+.ws-file-item .chevron-spacer { width: 14px; flex-shrink: 0; }
+.ws-folder { cursor: pointer; }
+
+.ws-file-item .name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ws-file-actions { flex-shrink: 0; }
+.ws-file-actions button svg { width: 14px; height: 14px; }
